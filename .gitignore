@@ -2,8 +2,9 @@
 
 /.idea
 *.tsbuildinfo
-
 .DS_Store
+*~
+.*~
 
 # Logs
 logs
