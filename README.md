@@ -1,3 +1,19 @@
+# LAVA staking concept
+
+The staking contract here implements revenue sharing among stakers of an asset.
+The stake of each staker is determined both by the amount of tokens they are staking 
+as well as the amount of time they have been staking. The latter provides a bonus
+stake that accrues at 100% APR of the token stake. Depositing 100 tokens means
+a stake of 100 immediately, 200 after one year, 300 after two years and so on...
+Unstaking at any time, returns the original tokens to the staker and burns the bonus stake.
+
+Revenue is distributed as WAVAX from the balance of the caller of `distribute`.
+
+Users can compound their stake, add more tokens, and claim any rewards with `deposit`.
+
+Users can unstake and receive any final rewards with `withdrawAll`.
+
+
 ## Prerequisites
 
 ### NodeJS and Yarn
