@@ -17,7 +17,6 @@ const main = async(): Promise<any> => {
         forking: {
           jsonRpcUrl: 'https://api.avax.network/ext/bc/C/rpc', 
           enabled: true,
-          blockNumber: 7867551,
         },
       },
     ],
