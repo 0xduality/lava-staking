@@ -2,7 +2,9 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
 struct StakeInfo 
 {
@@ -12,7 +14,7 @@ struct StakeInfo
     uint256 withdrawn;     // amount of shares that an address has withdrawn
 }
 
-contract LavaStaking
+contract LavaStaking is Ownable, Pausable
 {
     event  StakeIncrease(address indexed user, uint amount);
     event  StakeDecrease(address indexed user, uint amount);
@@ -46,7 +48,7 @@ contract LavaStaking
     * @dev Distributes rewards to stakers.
     * @param amount Amount to be distributed.
     */
-    function distribute(uint256 amount) public 
+    function distribute(uint256 amount) public whenNotPaused
     {
         wavax.transferFrom(msg.sender, address(this), amount);
         uint256 supply = totalSupply;
@@ -73,7 +75,7 @@ contract LavaStaking
     * @dev Deposit additional stake and claim any existing rewards
     * @param amount additional amount to be staked (can be 0 to claim and compound)
     */
-    function deposit(uint256 amount) public 
+    function deposit(uint256 amount) public whenNotPaused
     {
         uint256 pending = pendingRewards(msg.sender);
         wavax.transfer(msg.sender, pending);
@@ -94,7 +96,7 @@ contract LavaStaking
     /**
     * @dev Withdraw all stake, claim all pending rewards and burn all bonus stake
     */
-    function withdrawAll() public 
+    function withdrawAll() public whenNotPaused
     {
         uint256 pending = pendingRewards(msg.sender);
         wavax.transfer(msg.sender, pending);
@@ -106,5 +108,27 @@ contract LavaStaking
         totalSupply -= total;
         emit StakeDecrease(msg.sender, total);
         asset.transfer(msg.sender, tokens);
+    }
+
+
+    /**
+    * @dev to help users who accidentally send their tokens to this contract
+    */
+    function recoverToken(address token, address account, uint256 amount) public onlyOwner {
+        IERC20(token).transfer(account, amount);
+    }
+
+    /**
+     * @dev Triggers stopped state.
+     */
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev Returns to normal state.
+     */
+    function unpause() public onlyOwner {
+        _unpause();
     }
 }
