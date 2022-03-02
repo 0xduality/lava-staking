@@ -52,3 +52,24 @@ You can define custom hardhat tasks in `hardhat.config.ts`
 
 There is a documentation under the Avalanche's official documentation repository:
 [Using Hardhat with the Avalanche C-Chain](https://docs.avax.network/build/tutorials/smart-contracts/using-hardhat-with-the-avalanche-c-chain)
+
+
+## Running the tests
+
+It's a bit of an unconventional setup to have Hardhat with Python tests. You need to have `web3`, `requests`, and `tabulate` packages installed;
+all of them can be installed via `pip install`. 
+
+Start a Hardhat fork of mainnet (the tests use the WAVAX contract address from mainnet):
+```zsh
+$ npx hardhat node 
+```
+
+On another terminal deploy the contracts on the fork
+```zsh
+$ npx hardhat run ./scripts/deploy.ts --network localhost
+```
+
+After the contracts are deployed run the python tests
+```zsh
+$ python test/lava-staking-tests.py
+```

@@ -18,14 +18,13 @@ contract LavaStaking
     event  StakeDecrease(address indexed user, uint amount);
     event  RewardsDistributed(address indexed funder, uint amount);
 
-    ERC20 public immutable asset;
-    ERC20 public immutable wavax;
     uint256 public totalSupply = 0;
     uint256 public shares = 0;
     mapping(address => StakeInfo) public stake;  
     uint128 private constant MULTIPLIER = type(uint128).max;
+    ERC20 public immutable asset;
+    ERC20 public immutable wavax;
     uint8 public immutable decimals;
-
 
     constructor(ERC20 _asset, ERC20 _wavax) 
     {
